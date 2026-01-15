@@ -1,0 +1,3 @@
+vehicle_type,total_manufacturing_co2_kg,battery_manufacturing_co2_kg,fluids_co2_kg,glider_co2_kg
+ICE_Sedan,6079,34,745,5300
+EV_Sedan,10471,5238,174,5059
