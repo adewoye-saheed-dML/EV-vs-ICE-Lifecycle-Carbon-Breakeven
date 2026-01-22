@@ -18,13 +18,18 @@ This application uses a discrete-time simulation model (step = 1,000 km) to calc
 The ICE model accounts for both tailpipe emissions and the upstream emissions required to produce the fuel (Well-to-Pump).
 
 * **Formula:**
-    $$E_{ice}(d) = \text{Mfg}_{ice} + \sum_{k=0}^{d} \left( \frac{8887 \text{ gCO}_2/\text{gal}}{MPG_{adj}} \times 1.266 \right)$$
-
+    $$
+    E_{ice}(d) = \mathrm{Mfg}_{ice}
+    + d \times \left( \frac{8887}{MPG_{adj}} \times 1.266 \right)
+    $$
+   
 * **Logic Explained:**
     * 8,887 g: The amount of CO2 released by burning 1 gallon of gasoline (EPA standard).
     * 1.266 (WTP Factor): A "Well-to-Pump" multiplier adds 26.6% to account for oil drilling, refining, and transport (GREET model).
     * **Real-World Penalty:** The user-input MPG is penalized by a percentage to simulate real-world traffic conditions:
-        $$MPG_{adj} = MPG_{rated} \times (1 - \text{Penalty}\%)$$
+        $$
+        MPG_{adj} = MPG_{rated} \times (1 - \text{Penalty}\%)
+        $$
 
 ### EV (Electric Vehicle) Physics
 The EV model is dynamic. It accounts for battery degradation(efficiency loss) and grid decarbonization (grid cleaning) simultaneously over time.
