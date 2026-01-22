@@ -64,7 +64,7 @@ def build_simulation(
         dynamic_grid_gpkwh = grid_adj * (1 - annual_decarbonization_rate) ** years
         ev_slope_g_km_points = ev_kwh_per_km * dynamic_grid_gpkwh
     else:
-        ev_slope_g_km_points = np.full_like(km_points, ev_kwh_per_km * grid_adj)
+        ev_slope_g_km_points = np.full_like(km_points, ev_kwh_per_km * grid_adj, dtype=float))
 
     ev_slope_kg_km_points = ev_slope_g_km_points / 1000.0
     ev_step_kg_points = ev_slope_kg_km_points * KM_STEP
@@ -176,7 +176,7 @@ st.title("EV vs ICE Lifecycle Carbon Breakeven Analysis")
 col1, col2, col3 = st.columns(3)
 col1.metric("Manufacturing Carbon Debt (EV − ICE)", f"{int(ev_mfg - ice_mfg)} kg CO2")
 col2.metric("Grid Intensity (selected)", f"{grid_base_value:.0f} gCO2/kWh")
-if breakeven_km:
+if breakeven_km is not None:
     col3.metric("Breakeven", f"{breakeven_km:,} km", f"{breakeven_years:.1f} years")
 else:
     col3.metric("Breakeven", "NEVER within range", "Check assumptions or grid")
