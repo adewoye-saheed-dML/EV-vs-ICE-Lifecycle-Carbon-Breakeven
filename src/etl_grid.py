@@ -9,8 +9,6 @@ logger = logging.getLogger(__name__)
 RAW_PATH = Path("data/raw/IFI_Grid_Factors_2021_v3.2.xlsx")
 OUTPUT_PATH = Path("data/processed/grid_intensity_all.csv")
 
-
-
 # Helpers
 
 def find_data_sheet(xls: pd.ExcelFile) -> str:

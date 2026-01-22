@@ -4,15 +4,9 @@ import numpy as np
 import plotly.graph_objects as go
 from pathlib import Path
 from typing import Tuple
+from etl_ice import get_ice_emissions  
 
-# ----------------------
-# Local ETL helper
-# ----------------------
-from etl_ice import get_ice_emissions  # ICE slope in g/km including WTP
 
-# ----------------------
-# Constants & Defaults
-# ----------------------
 DATA_PROCESSED = Path("data/processed")
 MFG_PATH = DATA_PROCESSED / "manufacturing_baselines.csv"
 GRID_PATH = DATA_PROCESSED / "grid_intensity_all.csv"
@@ -21,9 +15,6 @@ MAX_KM = 250000
 
 st.set_page_config(page_title="EV vs ICE Lifecycle Breakeven", layout="wide")
 
-# ----------------------
-# Data loaders
-# ----------------------
 @st.cache_data
 def load_data(mfg_path: Path = MFG_PATH, grid_path: Path = GRID_PATH) -> Tuple[pd.DataFrame, pd.DataFrame]:
     mfg = pd.read_csv(mfg_path)
@@ -100,18 +91,16 @@ def build_simulation(
 
     return df
 
-# ----------------------
 # Load data
-# ----------------------
 try:
     df_mfg, df_grid = load_data()
 except FileNotFoundError:
     st.error("Data files not found. Run ETL scripts first.")
     st.stop()
 
-# ----------------------
+
 # Sidebar inputs
-# ----------------------
+
 with st.sidebar:
     st.header("Simulation Settings")
 
@@ -155,9 +144,8 @@ with st.sidebar:
 ice_mfg = float(df_mfg[df_mfg["vehicle_type"] == "ICE_Sedan"]["total_manufacturing_co2_kg"].iat[0])
 ev_mfg = float(df_mfg[df_mfg["vehicle_type"] == "EV_Sedan"]["total_manufacturing_co2_kg"].iat[0])
 
-# ----------------------
+
 # Build simulation
-# ----------------------
 sim_df = build_simulation(
     ice_mpg=ice_mpg,
     ev_kwh_per_100km=ev_eff,
@@ -182,10 +170,8 @@ else:
     breakeven_km = None
     breakeven_years = None
 
-# ----------------------
 # Dashboard layout
-# ----------------------
-st.title("EV vs ICE Lifecycle Carbon Breakeven — Pro")
+st.title("EV vs ICE Lifecycle Carbon Breakeven Analysis")
 
 col1, col2, col3 = st.columns(3)
 col1.metric("Manufacturing Carbon Debt (EV − ICE)", f"{int(ev_mfg - ice_mfg)} kg CO2")
@@ -195,9 +181,9 @@ if breakeven_km:
 else:
     col3.metric("Breakeven", "NEVER within range", "Check assumptions or grid")
 
-# ----------------------
+
 # Distance inspector
-# ----------------------
+
 with st.expander("Inspect Emissions at Specific Distance"):
     inspect_km = st.slider("Distance (km)", 0, MAX_KM, min(5000, MAX_KM))
     row = sim_df.iloc[(inspect_km // KM_STEP)]
@@ -210,9 +196,9 @@ with st.expander("Inspect Emissions at Specific Distance"):
     monetized = (row["delta_kg"] / 1000.0) * carbon_price
     st.write(f"Monetized difference at this distance: ${monetized:,.2f} (using ${carbon_price}/tCO2)")
 
-# ----------------------
+
 # Plots
-# ----------------------
+
 # Cumulative emissions
 fig = go.Figure()
 fig.add_trace(go.Scatter(x=sim_df["km"], y=sim_df["ice_total_kg"], name="ICE Total", line=dict(width=3)))
@@ -239,9 +225,8 @@ fig2.add_hline(y=0, line=dict(color="black", dash="dash"))
 fig2.update_layout(title="Delta Emissions (ICE − EV)", xaxis_title="Distance (km)", yaxis_title="kg CO2", template="plotly_white")
 st.plotly_chart(fig2, use_container_width=True)
 
-# ----------------------
 # Export
-# ----------------------
+
 export_df = sim_df[["km", "ice_total_kg", "ev_total_kg", "delta_kg", "grid_used_g_per_kwh", "ev_slope_g_per_km"]].copy()
 export_df.rename(columns={
     "km":"distance_km",
@@ -252,9 +237,9 @@ export_df.rename(columns={
 csv = export_df.to_csv(index=False)
 st.download_button("Download scenario results (CSV)", data=csv, file_name="breakeven_scenario.csv", mime="text/csv")
 
-# ----------------------
+
 # Data assumptions
-# ----------------------
+
 with st.expander("Data Sources & Assumptions"):
     st.markdown("""
 - **Manufacturing baselines:** GREET 2025
