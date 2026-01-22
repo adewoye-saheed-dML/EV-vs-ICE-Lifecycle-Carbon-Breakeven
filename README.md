@@ -18,9 +18,11 @@ This application uses a discrete-time simulation model (step = 1,000 km) to calc
 The ICE model accounts for both tailpipe emissions and the upstream emissions required to produce the fuel (Well-to-Pump).
 
 * **Formula:**
-    $$E_{ice}(d) = \mathrm{Mfg}_{ice}
-    + d \times \left( \frac{8887}{MPG_{adj}} \times 1.266 \right)
-    $$
+$$
+E_{ice}(d) =
+\mathrm{Mfg}_{ice}
++ d \times \left( \frac{8887}{MPG_{adj}} \times 1.266 \right)
+$$
    
 * **Logic Explained:**
     * 8,887 g: The amount of CO2 released by burning 1 gallon of gasoline (EPA standard).
