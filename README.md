@@ -18,18 +18,19 @@ This application uses a discrete-time simulation model (step = 1,000 km) to calc
 The ICE model accounts for both tailpipe emissions and the upstream emissions required to produce the fuel (Well-to-Pump).
 
 * **Formula:**
-$$
-E_{ice}(d) =
-\mathrm{Mfg}_{ice}
-+ d \times \left( \frac{8887}{MPG_{adj}} \times 1.266 \right)
-$$
+
+```math
+E_{ice}(d) = \mathrm{Mfg}_{ice} + d \times \left( \frac{8887}{MPG_{adj}} \times 1.266 \right)
+```
    
 * **Logic Explained:**
     * 8,887 g: The amount of CO2 released by burning 1 gallon of gasoline (EPA standard).
     * 1.266 (WTP Factor): A "Well-to-Pump" multiplier adds 26.6% to account for oil drilling, refining, and transport (GREET model).
     * **Real-World Penalty:** The user-input MPG is penalized by a percentage to simulate real-world traffic conditions:
-        $$MPG_{adj} = MPG_{rated} \times (1 - \text{Penalty}\%)
-        $$
+
+```math
+MPG_{adj} = MPG_{rated} \times (1 - \text{Penalty}\%)
+```
 
 ### EV (Electric Vehicle) Physics
 The EV model is dynamic. It accounts for battery degradation(efficiency loss) and grid decarbonization (grid cleaning) simultaneously over time.
@@ -38,18 +39,27 @@ The EV model is dynamic. It accounts for battery degradation(efficiency loss) an
 Batteries lose capacity and efficiency as they age. We model this linearly over the vehicle's lifespan (0 to 250,000 km).
 
 * **Formula:**
-    $$\eta_{ev}(d) = \eta_{base} \times \left( 1 + \text{Degradation}\% \times \frac{d}{250000} \right)$$
 
-    * Logic: An EV that starts at 18 kWh/100km might degrade to 21 kWh/100km by the end of its life, requiring more energy to drive the same distance.
+```math
+\eta_{ev}(d) = \eta_{base} \times \left( 1 + \text{Degradation}\% \times \frac{d}{250000} \right)
+```
+
+* Logic: An EV that starts at 18 kWh/100km might degrade to 21 kWh/100km by the end of its life, requiring more energy to drive the same distance.
 
 #### Grid Decarbonization (Exponential Decay)
 The simulator assumes the electricity grid gets cleaner over time based on a user-defined annual rate.
+
 * **Formula:**
-    $$G_{intensity}(t) = G_{base} \times (1 - \text{DecarbRate})^{t}$$
-    * Where: $t$ is calculated as $d / \text{AnnualDriving}_{km}$.
+
+```math
+G_{intensity}(t) = G_{base} \times (1 - \text{DecarbRate})^{t}
+```
+
+* Where: $t$ is calculated as $d / \text{AnnualDriving}_{km}$.
 
 ### Cumulative Integration (The "Riemann Sum" Fix)
 To avoid "forward-bias" errors (where the car gets credit for a cleaner grid before it actually reaches that year), the simulation uses a **Left Riemann Sum** logic for integration.
+
 * **Logic:** For the interval $k$ to $k+1000$, we use the emissions rate at distance $k$ (start of interval), not $k+1000$ (end of interval).
 * **Code Implementation:**
     ```python
@@ -60,6 +70,7 @@ To avoid "forward-bias" errors (where the car gets credit for a cleaner grid bef
 
 ### Manufacturing Debt (The "Backpack")
 The simulation starts at $d=0$ with a manufacturing carbon debt.
+
 * **EV Debt:** Includes Glider + Battery + Fluids + Assembly (~10,500 kg CO2).
 * **ICE Debt:** Includes Glider + Engine + Fluids + Assembly (~6,000 kg CO2).
 * **Source:** GREET 2025 Model.
@@ -104,19 +115,23 @@ cd EV-vs-ICE-Lifecycle-Carbon-Breakeven
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
+
 ### Step 2: Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
+
 ### Step 3: Run ETL (Optional)
 ```bash
 python src/etl_mfg.py
 python src/etl_grid.py
 ```
+
 ### Step 4: Launch App
 ```bash
 streamlit run src/app.py
 ```
+
 ## Application Architecture
 ```text
 ├── src/
@@ -131,16 +146,17 @@ streamlit run src/app.py
 ```
 
 ## Features & Controls
+
 **Grid Mode Toggle:** 
-*  * Average: Represents the current mix of generation.
-   * Marginal: Represents the emissions impact of adding new * load (EV charging) to the grid.
+* **Average:** Represents the current mix of generation.
+* **Marginal:** Represents the emissions impact of adding new load (EV charging) to the grid.
 
 **Sensitivity Analysis:**
-*    Sliders allow users to test "Worst Case" (Dirty Grid +   High Degradation) vs "Best Case" scenarios.
+* Sliders allow users to test "Worst Case" (Dirty Grid + High Degradation) vs "Best Case" scenarios.
 
 **Monetization:**
-*    Calculates the social cost of carbon savings using a user-defined price (e.g., $50/ton).
+* Calculates the social cost of carbon savings using a user-defined price (e.g., $50/ton).
 
 **Robust Error Handling:**
-*    Prevents crashes when selecting countries with incomplete data.
-*    Validates slider inputs to prevent impossible physics (e.g., negative distance).
+* Prevents crashes when selecting countries with incomplete data.
+* Validates slider inputs to prevent impossible physics (e.g., negative distance).
