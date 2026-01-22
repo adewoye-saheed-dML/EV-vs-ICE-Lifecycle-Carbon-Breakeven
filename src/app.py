@@ -162,7 +162,7 @@ sim_df = build_simulation(
 )
 
 # Breakeven calculation
-breakeven_row = sim_df[sim_df["delta_kg"] <= 0]
+breakeven_row = sim_df[sim_df["delta_kg"] > 0]
 if not breakeven_row.empty:
     breakeven_km = int(breakeven_row["km"].iat[0])
     breakeven_years = breakeven_km / max(annual_km,1)
