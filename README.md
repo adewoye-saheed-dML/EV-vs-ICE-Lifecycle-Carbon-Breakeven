@@ -4,6 +4,9 @@ A professional-grade interactive simulation tool built with Streamlit to compare
 
 This project simulate vehicle physics, grid dynamics, and manufacturing debt over a 250,000 km lifecycle. It is designed to identify the exact "Breakeven Point" where an EV's operational carbon savings offset its higher initial manufacturing footprint.
 
+<img width="1560" height="840" alt="Image" src="https://github.com/user-attachments/assets/3e3ea83b-d3e3-48ca-8bc5-9477e345eef3" />
+
+
 ---
 
 ## Mathematical & Simulation Logic
