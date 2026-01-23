@@ -27,8 +27,10 @@ The EV model is dynamic. It accounts for battery degradation(efficiency loss) an
 
 #### Linear Efficiency Degradation
 Batteries lose capacity and efficiency as they age. We model this linearly over the vehicle's lifespan (0 to 250,000 km).
+
 * **Formula:**
     $$\eta_{ev}(d) = \eta_{base} \times \left( 1 + \text{Degradation}\% \times \frac{d}{250,000} \right)$$
+
     * Logic: An EV that starts at 18 kWh/100km might degrade to 21 kWh/100km by the end of its life, requiring more energy to drive the same distance.
 
 #### Grid Decarbonization (Exponential Decay)
@@ -125,11 +127,11 @@ streamlit run src/app.py
    * Marginal: Represents the emissions impact of adding new * load (EV charging) to the grid.
 
 **Sensitivity Analysis:**
-*    - Sliders allow users to test "Worst Case" (Dirty Grid +   High Degradation) vs "Best Case" scenarios.
+*    Sliders allow users to test "Worst Case" (Dirty Grid +   High Degradation) vs "Best Case" scenarios.
 
 **Monetization:**
-*    - Calculates the social cost of carbon savings using a user-defined price (e.g., $50/ton).
+*    Calculates the social cost of carbon savings using a user-defined price (e.g., $50/ton).
 
 **Robust Error Handling:**
-*    - Prevents crashes when selecting countries with incomplete data.
-*    - Validates slider inputs to prevent impossible physics (e.g., negative distance).
+*    Prevents crashes when selecting countries with incomplete data.
+*    Validates slider inputs to prevent impossible physics (e.g., negative distance).
