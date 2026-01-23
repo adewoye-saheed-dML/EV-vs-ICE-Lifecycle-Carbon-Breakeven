@@ -6,6 +6,7 @@ This project simulate vehicle physics, grid dynamics, and manufacturing debt ove
 
 <img width="1560" height="840" alt="Image" src="https://github.com/user-attachments/assets/3e3ea83b-d3e3-48ca-8bc5-9477e345eef3" />
 
+**Dashboard link:** https://ev-vs-ice-lca-carbon-breakeven.streamlit.app/
 
 ---
 
@@ -17,7 +18,7 @@ This application uses a discrete-time simulation model (step = 1,000 km) to calc
 The ICE model accounts for both tailpipe emissions and the upstream emissions required to produce the fuel (Well-to-Pump).
 
 * **Formula:**
-    $$E_{ice}(d) = \text{Mfg}_{ice} + \sum_{k=0}^{d} \left( \frac{8,887 \text{ gCO}_2/\text{gal}}{MPG_{adj}} \times 1.266 \right)$$
+    $$E_{ice}(d) = \text{Mfg}_{ice} + \sum_{k=0}^{d} \left( \frac{8887 \text{ gCO}_2/\text{gal}}{MPG_{adj}} \times 1.266 \right)$$
 
 * **Logic Explained:**
     * 8,887 g: The amount of CO2 released by burning 1 gallon of gasoline (EPA standard).
@@ -32,7 +33,7 @@ The EV model is dynamic. It accounts for battery degradation(efficiency loss) an
 Batteries lose capacity and efficiency as they age. We model this linearly over the vehicle's lifespan (0 to 250,000 km).
 
 * **Formula:**
-    $$\eta_{ev}(d) = \eta_{base} \times \left( 1 + \text{Degradation}\% \times \frac{d}{250,000} \right)$$
+    $$\eta_{ev}(d) = \eta_{base} \times \left( 1 + \text{Degradation}\% \times \frac{d}{250000} \right)$$
 
     * Logic: An EV that starts at 18 kWh/100km might degrade to 21 kWh/100km by the end of its life, requiring more energy to drive the same distance.
 
