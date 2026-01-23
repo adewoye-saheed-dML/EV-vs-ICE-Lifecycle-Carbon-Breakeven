@@ -120,16 +120,16 @@ streamlit run src/app.py
 ```
 
 ## Features & Controls
-*** Grid Mode Toggle:** 
-    - Average: Represents the current mix of generation.
-    - Marginal: Represents the emissions impact of adding new * load (EV charging) to the grid.
+**Grid Mode Toggle:** 
+*  * Average: Represents the current mix of generation.
+   * Marginal: Represents the emissions impact of adding new * load (EV charging) to the grid.
 
-*** Sensitivity Analysis:**
-    - Sliders allow users to test "Worst Case" (Dirty Grid + High Degradation) vs "Best Case" scenarios.
+**Sensitivity Analysis:**
+*    - Sliders allow users to test "Worst Case" (Dirty Grid +   High Degradation) vs "Best Case" scenarios.
 
-***Monetization:**
-    - Calculates the social cost of carbon savings using a user-defined price (e.g., $50/ton).
+**Monetization:**
+*    - Calculates the social cost of carbon savings using a user-defined price (e.g., $50/ton).
 
-***Robust Error Handling:**
-    - Prevents crashes when selecting countries with incomplete data.
-    - Validates slider inputs to prevent impossible physics (e.g., negative distance).
+**Robust Error Handling:**
+*    - Prevents crashes when selecting countries with incomplete data.
+*    - Validates slider inputs to prevent impossible physics (e.g., negative distance).
