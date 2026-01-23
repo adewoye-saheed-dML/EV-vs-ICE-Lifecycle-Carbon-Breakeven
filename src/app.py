@@ -201,8 +201,22 @@ with st.expander("Inspect Emissions at Specific Distance"):
 
 # Cumulative emissions
 fig = go.Figure()
-fig.add_trace(go.Scatter(x=sim_df["km"], y=sim_df["ice_total_kg"], name="ICE Total", line=dict(width=3)))
-fig.add_trace(go.Scatter(x=sim_df["km"], y=sim_df["ev_total_kg"], name="EV Total", line=dict(width=3)))
+fig.add_trace(go.Scatter(
+    x=sim_df["km"], 
+    y=sim_df["ev_total_kg"], 
+    name="EV Total", 
+    line=dict(width=3)
+))
+
+fig.add_trace(go.Scatter(
+    x=sim_df["km"], 
+    y=sim_df["ice_total_kg"], 
+    name="ICE Total", 
+    line=dict(width=3),
+    fill='tonexty',
+    fillcolor='rgba(0, 200, 0, 0.1)' 
+))
+
 fig.add_trace(go.Scatter(
     x=np.concatenate([sim_df["km"], sim_df["km"][::-1]]),
     y=np.concatenate([sim_df["delta_kg"], np.zeros_like(sim_df["delta_kg"]) + sim_df["delta_kg"].min() - 1e3][::-1]),
